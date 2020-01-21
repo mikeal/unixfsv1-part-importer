@@ -1,11 +1,11 @@
 const importer = require('../js-ipfs-unixfs-importer')
-const CID = require('cids')
 const Block = require('@ipld/block')
 
 const run = async parts => {
   const blocks = []
   const ipld = {
     put: (node, format) => {
+      /* istanbul ignore if */
       if (format !== 112) {
         throw new Error('Should only receive dag-pb nodes')
       }
@@ -28,18 +28,12 @@ const run = async parts => {
       }
     }
   }
-  for await (const part of importer([{content: content()}], ipld, options)) {
-    // noop
-  }
+  const iter = importer([{ content: content() }], ipld, options)
+  let chunk
+  do {
+    chunk = await iter.next()
+  } while (!chunk.done)
   return blocks
 }
 
 module.exports = run
-
-/*
-const parts = [
-  { cidVersion: 1, size: 138102, cid: new CID('mAVUSIO7K3sMLqZPsJ/6SYMa5HiHBaj81xjniNYRUXbpKl/Ac') }
-]
-
-run(parts)
-*/

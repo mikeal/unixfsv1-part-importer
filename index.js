@@ -1,4 +1,4 @@
-const importer = require('../js-ipfs-unixfs-importer')
+const importer = require('ipfs-unixfs-importer')
 const Block = require('@ipld/block')
 
 const run = async parts => {
